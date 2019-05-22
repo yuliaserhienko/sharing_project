@@ -14,4 +14,8 @@
 ```sh
 docker-compose build
 docker-compose up
+
+docker-compose exec web bash -c "./sharing/manage.py makemigrations"
+docker-compose exec web bash -c "./sharing/manage.py migrate"
+docker-compose exec web bash -c "./sharing/manage.py createsuperuser"
 ```
