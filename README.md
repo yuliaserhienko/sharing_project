@@ -4,7 +4,7 @@
 - [X] Redis
 - [X] MySQL
 - [X] Celery beat
-- [ ] Authorization
+- [X] Authorization
 - [ ] WSGI
 - [ ] Nginx
 - [ ] Code cleanup
