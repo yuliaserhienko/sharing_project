@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./sharing/manage.py runserver 0.0.0.0:8000
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    volumes:
+      - .:/src/
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A sharing beat -l info --loglevel=DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    links:
+      - redis
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_DATABASE: sharingdb
+      MYSQL_USER: sharring_user
+      MYSQL_PASSWORD: password
+    ports:
+      - 3307:3306
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
