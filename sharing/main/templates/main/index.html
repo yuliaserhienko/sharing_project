@@ -9,8 +9,12 @@
     <ul>
         <li><a href="{% url 'logout' %}">Logout</a></li>
         <li><a href="{% url 'uploaded_files_by_user' %}">My files</a></li>
+        <li><a href="{% url 'file_upload' %}">Upload file</a></li>
     </ul>
 {% else %}
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -21,9 +25,10 @@
     <ul>
     {% for file in files %}
         <li>
-        Name: {{ file.name }}<br>
-        Lifetime: {{ file.file_lifetime }} days<br>
-        Uploaded: {{ file.created }}<br>
+            Name: <a href="{{ file.file.url }}" target="_blank">{{ file.name }}</a><br>
+            Loaded for {{ file.file_lifetime }} days<br>
+            Uploaded: {{ file.created }}<br>
+            Life until: {{ file.file_lifetime_date }}<br>
         </li>
     {% endfor %}
     </ul>
