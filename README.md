@@ -5,15 +5,16 @@
 - [X] MySQL
 - [X] Celery beat
 - [X] Authorization
-- [ ] WSGI
-- [ ] Nginx
+- [X] WSGI
+- [X] Nginx
 - [ ] Code cleanup
 - [ ] Bootstrap
 ```sh
 docker-compose build
 docker-compose up
 
-docker-compose exec web bash -c "./sharing/manage.py makemigrations"
-docker-compose exec web bash -c "./sharing/manage.py migrate"
-docker-compose exec web bash -c "./sharing/manage.py createsuperuser"
+docker-compose exec web bash -c "./manage.py makemigrations"
+docker-compose exec web bash -c "./manage.py migrate"
+docker-compose exec web bash -c "./manage.py collectstatic"
+docker-compose exec web bash -c "./manage.py createsuperuser"
 ```
