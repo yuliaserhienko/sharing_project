@@ -5,27 +5,26 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - 80:8000
+      - 88:80
     depends_on:
       - web
     volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./sharing/static/:/static
+      - ./sharing/media/:/media
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
     command: uwsgi sharing_uwsgi.ini
-#    command: ls -la
+    env_file:
+      - .envs
     links:
       - db
       - redis
     depends_on:
       - db
-    ports:
-      - 8000:8000
-    expose:
-      - 8000
     volumes:
       - ./sharing/:/src/
 
@@ -34,6 +33,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: celery -A sharing worker -l info --loglevel=INFO
+    env_file:
+      - .envs
     volumes:
       - ./sharing/:/src/
     depends_on:
@@ -45,6 +46,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: celery -A sharing beat -l info --loglevel=INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - .envs
     volumes:
       - ./sharing/:/src/
     depends_on:

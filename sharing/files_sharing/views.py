@@ -1,22 +1,24 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 from files_sharing import forms
 from files_sharing.models import File
 
 
-@csrf_exempt
+@login_required
 def file_upload_page(request):
     form = forms.FileUploadForm()
     return render(request, 'files_sharing/index.html', context={'form': form})
 
 
+@login_required
 def user_files_page(request):
     files = File.objects.filter(user=request.user)
     return render(request, 'main/index.html', context={'files': files})
 
 
+@login_required
 def save_file(request):
     result = {'file_uploaded': False, 'errors': None}
     if request.method == 'POST':

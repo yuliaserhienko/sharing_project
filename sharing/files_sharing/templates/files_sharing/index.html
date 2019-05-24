@@ -5,9 +5,11 @@
     <title>Title</title>
 </head>
 <div>
-    <div id="errors">
-    </div>
-    <form id="file_upload_form" enctype="multipart/form-data">{% csrf_token %}
+    <li><a href="{% url 'uploaded_files_by_user' %}">My files</a></li>
+    <div id="errors"></div>
+    <div id="message"></div>
+    <form id="file_upload_form" enctype="multipart/form-data">
+        {% csrf_token %}
         {{ form.as_p }}
         <button type="button" onclick="SendForm()">Upload</button>
     </form>
@@ -23,12 +25,16 @@
             console.log(typeof this.responseText);
             var result = JSON.parse(this.responseText)
 
-            if (result.file_uploaded !== true) {
+            if (result.file_uploaded === true) {
+                var message = document.getElementById('message');
+                message.innerHTML = "File successfully uploaded";
+            } else if (result.file_uploaded !== true) {
                 var error = document.getElementById('errors');
-                console.log(typeof result.errors);
-                console.log(result.errors);
                 var errorStringJSON = JSON.stringify(result.errors);
                 error.innerHTML = errorStringJSON;
+            } else {
+                var error = document.getElementById('errors');
+                var errorStringJSON = "Unexpected error";
             };
 
         }
