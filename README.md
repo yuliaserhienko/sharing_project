@@ -3,6 +3,7 @@
 - [X] Views
 - [X] Redis
 - [X] MySQL
+- [X] Celery worker
 - [X] Celery beat
 - [X] Authorization
 - [X] WSGI
