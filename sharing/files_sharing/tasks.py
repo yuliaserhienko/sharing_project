@@ -1,10 +1,11 @@
+from django.utils import timezone
+
 from celery import shared_task
 from files_sharing.models import File
 
 
 @shared_task
-def print_name():
-    files = File.objects.all()
-    for file in files:
-        file.delete()
-    return 'Yuliia'
+def delete_old_files():
+    files = File.objects.filter(file_lifetime_date__lte=timezone.now())
+    deleted = len([file.delete() for file in files])
+    return f'Files deleted: {deleted}'
