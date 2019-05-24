@@ -1,11 +1,22 @@
 version: "3"
 
 services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:8000
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ./manage.py runserver 0.0.0.0:8000
+    command: uwsgi sharing_uwsgi.ini
+#    command: ls -la
     links:
       - db
       - redis
